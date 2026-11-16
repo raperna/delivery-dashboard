@@ -1,0 +1,19 @@
+sprint:
+  length_working_days: 10          # 2-week sprint
+midpoint_working_day: 5            # "Too early" before this day
+thresholds:
+  at_risk: 0.05                    # shortfall >= 5%
+  off_track: 0.10                  # shortfall >= 10%
+min_items_for_status: 2            # shortfall must cover at least 2 average-sized items
+status_mapping:
+  "To Do": Backlog
+  "Backlog": Backlog
+  "In Progress": In Progress
+  "In Review": In Progress
+  "Blocked": Blocked
+  "Done": Done
+  "Closed": Done
+  "Resolved": Done
+team_labels: [Backend, Frontend, DevOps, QA]
+holidays:
+  source: data/holidays_barcelona.ics   # added in Phase 3, from the Ajuntament .ics file
