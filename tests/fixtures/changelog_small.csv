@@ -1,0 +1,5 @@
+key,author,created,field,fromString,toString
+DEMO-1,alice,2024-03-04 09:00:00,status,To Do,In Progress
+DEMO-1,alice,2024-03-05 11:00:00,labels,,Backend
+DEMO-2,bob,2024-03-05 12:00:00,status,In Progress,Blocked
+DEMO-2,bob,2024-03-06 08:30:00,status,Blocked,Done
