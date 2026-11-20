@@ -1,5 +1,3 @@
-import math
-
 from dashboard.parsers import parse_labels
 
 
