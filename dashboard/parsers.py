@@ -1,3 +1,4 @@
+import math
 import re
 
 # Matches each single-quoted item, e.g. 'PatchAvailable'
