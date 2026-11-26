@@ -17,3 +17,6 @@ status_mapping:
 team_labels: [Backend, Frontend, DevOps, QA]
 holidays:
   source: data/holidays_barcelona.ics   # added in Phase 3, from the Ajuntament .ics file
+story_points:
+  default_points: 1              # applied to items with no points (D-019)
+  max_defaulted_share: 0.20      # above this share, team status is "Not assessed"

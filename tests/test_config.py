@@ -11,3 +11,8 @@ def test_config_loads_and_has_required_sections():
     assert config["thresholds"]["at_risk"] < config["thresholds"]["off_track"]
     assert config["midpoint_working_day"] < config["sprint"]["length_working_days"]
     assert "Blocked" in config["status_mapping"].values()
+
+def test_story_points_settings_are_valid():
+    config = yaml.safe_load(CONFIG_PATH.read_text(encoding="utf-8"))
+    assert config["story_points"]["default_points"] > 0
+    assert 0 < config["story_points"]["max_defaulted_share"] < 1
