@@ -28,14 +28,14 @@ Updated at the end of each working session.
 | 6a | Sprint membership on any date | Done | 9 |
 | 7 | Commitment at sprint start (D-020) | Done | 10 |
 | 8 | Points and status on any date (D-021) | Done | 7 |
-| 9 | Metrics: throughput, velocity, cycle time | Not started | — |
+| 9 | Metrics: throughput, velocity, cycle time | Done | 12 |
 | 10 | Status rules (midpoint, minimum size) | Not started | — |
 | 11 | Blocked items with owners | Not started | — |
 | 12 | Streamlit UI | Not started | — |
 
 ## Current test count
 
-60 passing (1 config, 3 loader, 5 parsers, 6 sprint, 9 story points, 10 events, 9 sprint state, 10 commitment, 7 field state)
+72 passing (1 config, 3 loader, 5 parsers, 6 sprint, 9 story points, 10 events, 9 sprint state, 10 commitment, 7 field state, 12 calendar)
 
 ## Next action
 
