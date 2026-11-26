@@ -27,7 +27,7 @@ Updated at the end of each working session.
 | 6 | Events table (replay of changes) | Done | 10 |
 | 6a | Sprint membership on any date | Done | 9 |
 | 7 | Commitment at sprint start (D-020) | Done | 10 |
-| 8 | Team lookup at sprint start | Not started | — |
+| 8 | Points and status on any date (D-021) | Done | 7 |
 | 9 | Metrics: throughput, velocity, cycle time | Not started | — |
 | 10 | Status rules (midpoint, minimum size) | Not started | — |
 | 11 | Blocked items with owners | Not started | — |
@@ -35,7 +35,7 @@ Updated at the end of each working session.
 
 ## Current test count
 
-43 passing (1 config, 3 loader, 5 parsers, 6 sprint, 9 story points, 10 events, 9 sprint state)
+60 passing (1 config, 3 loader, 5 parsers, 6 sprint, 9 story points, 10 events, 9 sprint state, 10 commitment, 7 field state)
 
 ## Next action
 

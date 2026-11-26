@@ -66,6 +66,7 @@ Version 0.4. The full requirements text lives in `docs/REQUIREMENTS.md` (to be c
 | D-018 | Effort is measured in story points for every team. Item counts are not used. | Points are each team's own estimate and already drive the status rules. Counts for some teams would make percentages incomparable across teams. Overriding points would make the report disagree with what teams recognise. | Item counts as a fallback for non-estimating teams; a separate effort weight | 1 |
 | D-019 | Items with no story points get a default of 1 point, set in config.yaml. Each defaulted item is counted and shown as a warning. If the defaulted share of a team's commitment exceeds the configured limit, the team's status is Not assessed. If no committed item in a sprint has points, the status is Not assessed and throughput (item count) is the only speed measure shown. Speed and commitment status are labelled separately on the dashboard. | Real exports and test data will have gaps. A default keeps totals complete, while the warning and the limit stop a default from producing a confident status. A fully unpointed sprint has no basis for a commitment comparison, so it shows throughput only. Excluding unpointed items hides scope, and counting them as 0 understates work. | Exclude unpointed items; count them as 0; show a status built on defaults for unpointed sprints | 3 |
 | D-020 | Commitment is the set of items in a sprint at the end of its start day. An item's team is the single team label it has at that moment. Items with no team label, or two team labels, are flagged and excluded from team status. Label matching is case-insensitive. | The end of the start day lets planning-day additions count as committed, and later additions are scope change. A team can only be read from one label, so ambiguity is flagged rather than guessed. | Start of day (excludes planning-day additions); labels at the time of reporting | 3 |
+| D-021 | Single-valued fields (story points, status) are replayed with the same cutoff as labels and sprints. The latest event at or before the cutoff gives the value. A blank or cleared value is None, not zero. Points are read as numbers. | One replay rule for every field means one set of cutoff and ordering behaviour to test. Treating a cleared value as zero would count an unestimated item as trivial. | A separate function per field; storing values as text and converting later | 3 |
 
 ## User stories
 
@@ -110,6 +111,8 @@ Status: Not started, In progress, Done.
 - Events table: replays label changes to rebuild each issue's labels on any date. Ten tests.
 - Sprint membership on any date: replays full-list Sprint events so each issue's sprints are known on any date. Nine tests.
 - Commitment at sprint start (D-020): items in a sprint at the end of its start day, with the team read from labels at that moment. Conflicts and missing teams are flagged. Ten tests.
+- Field state on any date (D-021): one replay rule for status, story points, labels and sprints. Cleared points are blank, not zero. Seven tests.
+
 
 ### Changed
 
