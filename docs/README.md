@@ -24,7 +24,7 @@ Updated at the end of each working session.
 | 4 | Labels parser | Done | 5 |
 | 5 | Sprint parser (diff of sprint lists) | Done | 6 |
 | 5a | Story points default and Not assessed rule (D-019) | Done | 9 |
-| 6 | Events table (replay of changes) | Not started | — |
+| 6 | Events table (replay of changes) | Done | 10 |
 | 7 | Commitment at sprint start | Not started | — |
 | 8 | Team lookup at sprint start | Not started | — |
 | 9 | Metrics: throughput, velocity, cycle time | Not started | — |
@@ -34,7 +34,7 @@ Updated at the end of each working session.
 
 ## Current test count
 
-24 passing (1 config, 3 loader, 5 parsers, 6 sprint, 8 story points, 1 config story points).
+34 passing (1 config, 3 loader, 5 parsers, 6 sprint, 8 story points, 1 config story points, 10 events).
 
 ## Next action
 

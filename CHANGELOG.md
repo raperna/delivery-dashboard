@@ -101,9 +101,12 @@ Status: Not started, In progress, Done.
 ### Phase 3: Build (in progress)
 
 - Repository skeleton: layout, `config.yaml`, first config test, `.gitignore`.
-- CI pipeline: GitHub Actions runs `uv sync --locked` and `pytest` on every push.
+- CI pipeline: GitHub Actions runs `uv sync --locked`, `ruff check`, and `pytest` on every push.
 - Loader: header check before reading, and a named error for missing columns. Three tests.
 - Labels parser: handles the quoted, space-separated Kaggle format and empty cells. Five tests.
+- Sprint parser: diffs full-list Sprint events into added and removed sets. Six tests.
+- Story points rule (D-019): blank points default to 1 and are flagged, zero is kept as an estimate, and a sprint over the defaulted-share limit or with no points shows Not assessed with throughput. Nine tests, including the config check.
+- Events table: replays label changes to rebuild each issue's labels on any date. Ten tests.
 
 ### Changed
 
