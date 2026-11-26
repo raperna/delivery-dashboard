@@ -34,6 +34,7 @@ Version 0.4. The full requirements text lives in `docs/REQUIREMENTS.md` (to be c
 - On track below 5%. At risk from 5% to below 10%. Off track at 10% or more.
 - Too early before working day 5 of a 10-day sprint.
 - At risk or Off track requires a shortfall of at least two average-sized committed items.
+- Not assessed applies when the defaulted-points share is over the limit, or when no committed item in the sprint has points (D-019). Throughput is shown in those cases.
 
 **Data requirements**
 
@@ -62,6 +63,8 @@ Version 0.4. The full requirements text lives in `docs/REQUIREMENTS.md` (to be c
 | D-015 | Write failing tests before the code they test | Confirms each test checks real behaviour. A test that never fails proves nothing. | Code first, tests after | 3 |
 | D-016 | Keep the project in `C:\...\SDLC\delivery-dashboard` on the first PC, and in `D:\...` on the second | Each machine follows its own folder convention. The remote repository is the shared source. | One fixed path | 3 |
 | D-017 | Sprint changes are the diff between consecutive full-list events for the same issue | Jira stores the full sprint list after each change, so a single event can't show what was added or removed. Comparing with the previous state gives an explicit record of each change, including moves out and back in. | Treating each event as a single change | 3 |
+| D-018 | Effort is measured in story points for every team. Item counts are not used. | Points are each team's own estimate and already drive the status rules. Counts for some teams would make percentages incomparable across teams. Overriding points would make the report disagree with what teams recognise. | Item counts as a fallback for non-estimating teams; a separate effort weight | 1 |
+| D-019 | Items with no story points get a default of 1 point, set in config.yaml. Each defaulted item is counted and shown as a warning. If the defaulted share of a team's commitment exceeds the configured limit, the team's status is Not assessed. If no committed item in a sprint has points, the status is Not assessed and throughput (item count) is the only speed measure shown. Speed and commitment status are labelled separately on the dashboard. | Real exports and test data will have gaps. A default keeps totals complete, while the warning and the limit stop a default from producing a confident status. A fully unpointed sprint has no basis for a commitment comparison, so it shows throughput only. Excluding unpointed items hides scope, and counting them as 0 understates work. | Exclude unpointed items; count them as 0; show a status built on defaults for unpointed sprints | 3 |
 
 ## User stories
 
