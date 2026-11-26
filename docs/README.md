@@ -26,7 +26,7 @@ Updated at the end of each working session.
 | 5a | Story points default and Not assessed rule (D-019) | Done | 9 |
 | 6 | Events table (replay of changes) | Done | 10 |
 | 6a | Sprint membership on any date | Done | 9 |
-| 7 | Commitment at sprint start | Not started | — |
+| 7 | Commitment at sprint start (D-020) | Done | 10 |
 | 8 | Team lookup at sprint start | Not started | — |
 | 9 | Metrics: throughput, velocity, cycle time | Not started | — |
 | 10 | Status rules (midpoint, minimum size) | Not started | — |
