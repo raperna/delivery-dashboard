@@ -1,5 +1,7 @@
 import pandas as pd
 
+from dashboard.sprints import split_sprints
+
 
 def label_state(events, as_of):
     """Rebuild each issue's labels as they were on `as_of`.
@@ -27,4 +29,26 @@ def label_state(events, as_of):
 
 def labels_on(state, key):
     """Return the set of labels for one issue, or an empty set if it has none."""
+    return set(state.get(key, set()))
+
+def sprint_state(events, as_of):
+    """Rebuild each issue's sprint membership as it was on `as_of`.
+
+    Sprint events store the full sprint list after each change, so the state is
+    simply the most recent list at or before `as_of`. An empty list means the
+    issue is in no sprint. Returns a dict of issue key -> set of sprint names.
+    """
+    sprint_events = events[events["field"] == "Sprint"].copy()
+    sprint_events["created"] = pd.to_datetime(sprint_events["created"])
+    sprint_events = sprint_events[sprint_events["created"] <= pd.Timestamp(as_of)]
+    sprint_events = sprint_events.sort_values("created", kind="stable")
+
+    state = {}
+    for _, row in sprint_events.iterrows():
+        state[row["key"]] = set(split_sprints(row["toString"]))
+    return state
+
+
+def sprints_on(state, key):
+    """Return the set of sprints for one issue, or an empty set if it has none."""
     return set(state.get(key, set()))
