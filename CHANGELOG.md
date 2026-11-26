@@ -61,6 +61,7 @@ Version 0.4. The full requirements text lives in `docs/REQUIREMENTS.md` (to be c
 | D-014 | Exclude `data/` and `*.csv` from Git, with an exception for `tests/fixtures/` | Exports may contain company data, and the Kaggle changelog is 2.7 GB. Fixtures must be committed so CI can run. | Commit everything | 3 |
 | D-015 | Write failing tests before the code they test | Confirms each test checks real behaviour. A test that never fails proves nothing. | Code first, tests after | 3 |
 | D-016 | Keep the project in `C:\...\SDLC\delivery-dashboard` on the first PC, and in `D:\...` on the second | Each machine follows its own folder convention. The remote repository is the shared source. | One fixed path | 3 |
+| D-017 | Sprint changes are the diff between consecutive full-list events for the same issue | Jira stores the full sprint list after each change, so a single event can't show what was added or removed. Comparing with the previous state gives an explicit record of each change, including moves out and back in. | Treating each event as a single change | 3 |
 
 ## User stories
 
