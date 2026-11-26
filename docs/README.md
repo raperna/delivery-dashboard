@@ -32,11 +32,11 @@ Updated at the end of each working session.
 | 10 | Team status rules (D-023, D-024) | Done | 13 |
 | 11 | Team snapshot and team report (D-025, D-026) | Done | 13 |
 | 12 | Blocked items with owners (D-027) | Done | 15 |
-| 12 | Streamlit UI | Not started | — |
+| 13 | Metrics: throughput, velocity, cycle time (D-028 to D-030) | Done | 13 |
 
 ## Current test count
 
-113 passing (1 config, 3 loader, 5 parsers, 6 sprint, 9 story points, 10 events, 9 sprint state, 10 commitment, 7 field state, 12 calendar, 13 status, 13 snapshot)
+126 passing (1 config, 3 loader, 5 parsers, 6 sprint, 9 story points, 10 events, 9 sprint state, 10 commitment, 7 field state, 12 calendar, 13 status, 13 snapshot)
 
 ## Next action
 

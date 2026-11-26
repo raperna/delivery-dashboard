@@ -91,3 +91,11 @@ def last_change_time(events, field, as_of):
     for _, row in _events_until(events, field, as_of).iterrows():
         state[row["key"]] = row["created"]
     return state
+
+def first_event_time(events, field, values, as_of):
+    """Timestamp of each issue's first event for one field whose value is in `values`."""
+    state = {}
+    for _, row in _events_until(events, field, as_of).iterrows():
+        if row["toString"] in values and row["key"] not in state:
+            state[row["key"]] = row["created"]
+    return state
