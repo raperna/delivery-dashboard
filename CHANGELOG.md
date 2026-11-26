@@ -33,7 +33,6 @@ Version 0.4. The full requirements text lives in `docs/REQUIREMENTS.md` (to be c
 - Shortfall = (expected done − done) ÷ committed.
 - On track below 5%. At risk from 5% to below 10%. Off track at 10% or more.
 - Too early before working day 5 of a 10-day sprint.
-- At risk or Off track requires a shortfall of at least two average-sized committed items.
 - Not assessed applies when the defaulted-points share is over the limit, or when no committed item in the sprint has points (D-019). Throughput is shown in those cases.
 
 **Data requirements**
@@ -68,6 +67,8 @@ Version 0.4. The full requirements text lives in `docs/REQUIREMENTS.md` (to be c
 | D-020 | Commitment is the set of items in a sprint at the end of its start day. An item's team is the single team label it has at that moment. Items with no team label, or two team labels, are flagged and excluded from team status. Label matching is case-insensitive. | The end of the start day lets planning-day additions count as committed, and later additions are scope change. A team can only be read from one label, so ambiguity is flagged rather than guessed. | Start of day (excludes planning-day additions); labels at the time of reporting | 3 |
 | D-021 | Single-valued fields (story points, status) are replayed with the same cutoff as labels and sprints. The latest event at or before the cutoff gives the value. A blank or cleared value is None, not zero. Points are read as numbers. | One replay rule for every field means one set of cutoff and ordering behaviour to test. Treating a cleared value as zero would count an unestimated item as trivial. | A separate function per field; storing values as text and converting later | 3 |
 | D-022 | Working days are Monday to Friday, excluding holidays from the configured calendar. A sprint's working days are counted inclusively from its start date to its end date. Working days elapsed on a date are counted inclusively from the start date to that date, and are zero before the start. A holiday on a weekend does not remove a working day. | Expected done depends on working days, not calendar days, so weekends and holidays do not distort the burn-down. Counting from the start date keeps the midpoint rule (working day 5) simple to explain. | Calendar days; counting from the first working day after a weekend start | 3 |
+| D-023 | A team's status compares committed points done by the report date with the linear expected amount: committed × working days elapsed (capped at sprint length) ÷ sprint working days. Shortfall = (expected − done) ÷ committed. Too early before the midpoint working day. At risk at a shortfall of 5% or more, Off track at 10% or more, using the percentage alone. Not assessed when the sprint rule in D-019 applies or no points are committed. | Each part of the rule is a separate, testable step. The cap stops a report run after sprint end from inflating the expected amount. | Count-based expectation; percentage with a minimum-size gate (see D-024) | 3 |
+| D-024 | The minimum-size gate from D-009 is removed. The percentage thresholds alone decide the status. The report states which rule produced each status. | The team chose to let the percentage decide, so one late item can change a status on small teams. This is accepted and made visible, rather than hidden by a gate. | Keep the two-item minimum from D-009 | 3 |
 
 ## User stories
 
@@ -114,6 +115,7 @@ Status: Not started, In progress, Done.
 - Commitment at sprint start (D-020): items in a sprint at the end of its start day, with the team read from labels at that moment. Conflicts and missing teams are flagged. Ten tests.
 - Field state on any date (D-021): one replay rule for status, story points, labels and sprints. Cleared points are blank, not zero. Seven tests.
 - Working-day calendar (D-022): Monday to Friday, minus configured holidays, with inclusive counts from the start date. Weekend holidays do not reduce working days. Twelve tests.
+- Team status rules (D-023): linear expected against committed points, Too early before the midpoint, At risk at 5%, Off track at 10%, Not assessed under the D-019 rules. Percentage alone decides (D-024). Twelve tests.
 
 
 ### Changed

@@ -4,7 +4,6 @@ midpoint_working_day: 5            # "Too early" before this day
 thresholds:
   at_risk: 0.05                    # shortfall >= 5%
   off_track: 0.10                  # shortfall >= 10%
-min_items_for_status: 2            # shortfall must cover at least 2 average-sized items
 status_mapping:
   "To Do": Backlog
   "Backlog": Backlog
