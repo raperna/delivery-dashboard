@@ -84,3 +84,10 @@ def sprint_state(events, as_of):
 def sprints_on(state, key):
     """Return the set of sprints for one issue, or an empty set if it has none."""
     return set(state.get(key, set()))
+
+def last_change_time(events, field, as_of):
+    """Timestamp of each issue's latest event for one field, at or before as_of."""
+    state = {}
+    for _, row in _events_until(events, field, as_of).iterrows():
+        state[row["key"]] = row["created"]
+    return state

@@ -71,6 +71,7 @@ Version 0.4. The full requirements text lives in `docs/REQUIREMENTS.md` (to be c
 | D-024 | The minimum-size gate from D-009 is removed. The percentage thresholds alone decide the status. The report states which rule produced each status. | The team chose to let the percentage decide, so one late item can change a status on small teams. This is accepted and made visible, rather than hidden by a gate. | Keep the two-item minimum from D-009 | 3 |
 | D-025 | Blocked items with no team label, or with two team labels, appear in the blocked list under "Team Unassigned", flagged. They are never dropped from the report. | A blocker that disappears from the report is the problem leadership most needs to see. Showing it as unassigned makes the gap visible, so someone fixes the label. | Hide until the label is fixed; attribute to the assignee | 1 |
 | D-026 | A team snapshot joins three sources into plain item records: committed membership and team from the start day (D-020), points from the start day (D-021), and done status from the report date. The status rule receives these records and never reads events directly. | Each source answers one question at one date, and the join is the only place those dates meet. Keeping the status rule free of events means it can be tested with plain lists, as it already is. | Status rule reads events directly; one function that does everything | 3 |
+| D-027 | The blocked list shows items whose status is a configured blocked status on the report date. Days waiting are calendar days from the latest change into Blocked to the report date. The team comes from the label on the report date, and the developer is the assignee on the report date. The list is sorted longest wait first. | A blocker is a clock running in real time, so calendar days match what the team experiences. The report date is used throughout, so the list agrees with the status view for the same day. | Working days (a one-line change if preferred); waiting from the first block ever, which hides re-blocks | 3 |
 
 ## User stories
 
@@ -119,6 +120,7 @@ Status: Not started, In progress, Done.
 - Working-day calendar (D-022): Monday to Friday, minus configured holidays, with inclusive counts from the start date. Weekend holidays do not reduce working days. Twelve tests.
 - Team status rules (D-023): linear expected against committed points, Too early before the midpoint, At risk at 5%, Off track at 10%, Not assessed under the D-019 rules. Percentage alone decides (D-024). Twelve tests.
 - Team snapshot (D-026): joins start-day membership and points with report-date status into item records, then runs the status rule. Unassigned blockers are shown as "Team Unassigned" (D-025). Thirteen tests.
+- Blocked items with owners (D-027): items blocked on the report date, team from the label on that date (D-025), developer from the assignee, calendar days waiting from the latest block, longest first. Fifteen tests.
 
 
 ### Changed
