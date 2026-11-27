@@ -1,7 +1,5 @@
 from datetime import date
 
-from dashboard.report import build_report, sprint_names
-
 from dashboard.calendar import holidays_from_csv
 from dashboard.config import (
     holiday_path,
@@ -9,6 +7,7 @@ from dashboard.config import (
     status_settings,
     statuses_mapped_to,
 )
+from dashboard.report import build_report, sprint_names
 from dashboard.synthetic import (
     END,
     EXPECTED_BLOCKED,
