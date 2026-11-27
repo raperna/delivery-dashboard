@@ -1,5 +1,6 @@
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 
+from dashboard.calendar import working_days_in_sprint
 from dashboard.events import field_state, label_state, labels_on, last_change_time
 
 UNASSIGNED = "Team Unassigned"
@@ -9,8 +10,13 @@ def _end_of_day(day):
     return datetime.combine(day, time(23, 59, 59))
 
 
-def blocked_items(events, report_date, blocked_statuses, team_labels):
-    """Items blocked on report_date, longest wait first (D-027, D-025)."""
+def working_days_waiting(blocked_on, report_date, holidays):
+    """Working days after the block date, up to and including the report date (D-033)."""
+    return working_days_in_sprint(blocked_on + timedelta(days=1), report_date, holidays)
+
+
+def blocked_items(events, report_date, blocked_statuses, team_labels, holidays):
+    """Items blocked on report_date, longest wait first (D-027, D-025, D-033)."""
     cutoff = _end_of_day(report_date)
     statuses = field_state(events, "status", cutoff)
     since = last_change_time(events, "status", cutoff)
@@ -40,6 +46,6 @@ def blocked_items(events, report_date, blocked_statuses, team_labels):
             "team_flag": flag,
             "developer": assignees.get(key),
             "waiting_since": waiting_since,
-            "days_waiting": (report_date - waiting_since).days,
+            "days_waiting": working_days_waiting(waiting_since, report_date, holidays),
         })
     return sorted(rows, key=lambda row: row["days_waiting"], reverse=True)

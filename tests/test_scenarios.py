@@ -40,5 +40,5 @@ def test_team_status_matches_hand_worked_answer(team, report_day, expected):
 
 
 def test_blocked_list_matches_hand_worked_answer():
-    rows = blocked_items(EVENTS, date(2026, 3, 6), BLOCKED, TEAMS)
+    rows = blocked_items(EVENTS, date(2026, 3, 6), BLOCKED, TEAMS, HOLIDAYS)
     assert [(row["key"], row["team"], row["days_waiting"]) for row in rows] == EXPECTED_BLOCKED

@@ -7,6 +7,7 @@ from dashboard.blocked import blocked_items
 TEAMS = ["Backend", "Frontend", "DevOps", "QA"]
 BLOCKED = {"Blocked"}
 REPORT = date(2026, 3, 10)
+HOLIDAYS = set()
 
 
 def make_events(rows):
@@ -32,7 +33,7 @@ def assignee(key, when, name):
 
 
 def run(events, report_date=REPORT):
-    return blocked_items(events, report_date, BLOCKED, TEAMS)
+    return blocked_items(events, report_date, BLOCKED, TEAMS, HOLIDAYS)
 
 
 def keys(rows):
@@ -57,9 +58,28 @@ def test_item_blocked_after_report_date_is_excluded():
     assert keys(run(events)) == []
 
 
-def test_days_waiting_counts_calendar_days_from_block():
+def test_days_waiting_counts_working_days_after_the_block():
+    # Blocked Thu 5 March; working days after it up to Mon 9 March: Fri 6, Mon 9
     events = make_events([block("DEMO-1", "2026-03-05 09:00:00")])
-    assert run(events)[0]["days_waiting"] == 5
+    assert run(events, report_date=date(2026, 3, 9))[0]["days_waiting"] == 2
+
+
+def test_weekend_does_not_add_days_waiting():
+    # Blocked Fri 6 March; on Mon 9 March only one working day has passed
+    events = make_events([block("DEMO-1", "2026-03-06 09:00:00")])
+    assert run(events, report_date=date(2026, 3, 9))[0]["days_waiting"] == 1
+
+
+def test_same_day_block_has_zero_days_waiting():
+    events = make_events([block("DEMO-1", "2026-03-06 09:00:00")])
+    assert run(events, report_date=date(2026, 3, 6))[0]["days_waiting"] == 0
+
+
+def test_holiday_is_not_counted_as_waiting():
+    # Blocked Fri 22 May; Mon 25 May is a holiday; on Tue 26 May one working day has passed
+    events = make_events([block("DEMO-1", "2026-05-22 09:00:00")])
+    rows = blocked_items(events, date(2026, 5, 26), BLOCKED, TEAMS, {date(2026, 5, 25)})
+    assert rows[0]["days_waiting"] == 1
 
 
 def test_reblocked_item_waits_from_its_latest_block():

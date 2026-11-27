@@ -56,12 +56,13 @@ def test_ahead_of_plan_is_on_track():
     assert result["status"] == "On track"
 
 
-def test_defaulted_share_over_limit_is_not_assessed():
+def test_defaulted_share_over_limit_is_not_assessed_with_throughput():
     # 3 of 10 blank = 30%, over the 20% limit
     mixed = [{"points": None, "done": False}] * 3 + items(7)
     result = team_status(mixed, elapsed_days=5, sprint_days=10, settings=SETTINGS)
     assert result["status"] == "Not assessed"
     assert result["speed"] == "throughput"
+    assert result["throughput"] == 0
 
 
 def test_blank_points_use_default_in_expected():
@@ -83,11 +84,49 @@ def test_elapsed_is_capped_at_sprint_length():
     assert result["expected"] == 10
 
 
-def test_zero_committed_points_is_not_assessed():
+def test_zero_committed_points_is_not_assessed_with_throughput():
     result = team_status(items(5, points=0), elapsed_days=5, sprint_days=10, settings=SETTINGS)
     assert result["status"] == "Not assessed"
+    assert result["speed"] == "throughput"
 
 
-def test_no_committed_items_is_not_assessed():
+def test_no_committed_items_is_na():
     result = team_status([], elapsed_days=5, sprint_days=10, settings=SETTINGS)
     assert result["status"] == "Not assessed"
+    assert result["speed"] == "N/A"
+
+
+def test_not_assessed_numbers_are_blank():
+    result = team_status(items(5, points=0), elapsed_days=5, sprint_days=10, settings=SETTINGS)
+    assert result["committed"] is None
+    assert result["expected"] is None
+    assert result["done"] is None
+    assert result["shortfall"] is None
+    assert result["velocity"] is None
+
+
+def test_velocity_is_done_points_when_assessed():
+    result = team_status(items(10, done_count=5), elapsed_days=5, sprint_days=10, settings=SETTINGS)
+    assert result["speed"] == "velocity"
+    assert result["velocity"] == 5
+    assert result["throughput"] is None
+
+
+def test_throughput_counts_done_committed_items_when_not_assessed():
+    mixed = [{"points": None, "done": False}] * 3 + items(7, done_count=4)
+    result = team_status(mixed, elapsed_days=5, sprint_days=10, settings=SETTINGS)
+    assert result["speed"] == "throughput"
+    assert result["throughput"] == 4
+    assert result["velocity"] is None
+
+
+def test_zero_point_items_use_throughput():
+    result = team_status(items(5, points=0, done_count=2), elapsed_days=5, sprint_days=10, settings=SETTINGS)
+    assert result["speed"] == "throughput"
+    assert result["throughput"] == 2
+
+
+def test_no_items_has_no_velocity_or_throughput():
+    result = team_status([], elapsed_days=5, sprint_days=10, settings=SETTINGS)
+    assert result["velocity"] is None
+    assert result["throughput"] is None
