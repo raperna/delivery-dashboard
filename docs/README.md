@@ -33,6 +33,7 @@ Updated at the end of each working session.
 | 11 | Team snapshot and team report (D-025, D-026) | Done | 13 |
 | 12 | Blocked items with owners (D-027) | Done | 15 |
 | 13 | Metrics: throughput, velocity, cycle time (D-028 to D-030) | Done | 13 |
+| 14 | Config connection and synthetic scenarios (D-031) | Done | 12 |
 
 ## Current test count
 

@@ -19,3 +19,6 @@ holidays:
 story_points:
   default_points: 1              # applied to items with no points (D-019)
   max_defaulted_share: 0.20      # above this share, team status is "Not assessed"
+holidays:
+  source: tests/fixtures/holidays_2026.csv   # 2026 calendar, checked against the Ajuntament page
+  
