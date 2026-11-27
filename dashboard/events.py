@@ -14,12 +14,25 @@ def _is_blank(value):
     return isinstance(value, str) and value == ""
 
 
-def _events_until(events, field, as_of):
-    """Return events for one field created on or before as_of, in time order."""
-    selected = events[events["field"] == field].copy()
-    selected["created"] = pd.to_datetime(selected["created"])
-    selected = selected[selected["created"] <= pd.Timestamp(as_of)]
-    return selected.sort_values("created", kind="stable")
+def _field_rows(events, field, as_of):
+    """Rows for one field created on or before as_of, as plain tuples in time order.
+
+    Each row is (key, created, from, to). Built once per call from column lists,
+    not row by row through pandas, which is what made the old version slow.
+    """
+    selected = events[events["field"] == field]
+    created = pd.to_datetime(selected["created"]).tolist()
+    keys = selected["key"].tolist()
+    froms = selected["fromString"].tolist()
+    tos = selected["toString"].tolist()
+    cutoff = pd.Timestamp(as_of)
+    rows = [
+        (keys[i], created[i], froms[i], tos[i])
+        for i in range(len(keys))
+        if created[i] <= cutoff
+    ]
+    rows.sort(key=lambda row: row[1])
+    return rows
 
 
 def field_state(events, field, as_of):
@@ -29,8 +42,8 @@ def field_state(events, field, as_of):
     Returns a dict of issue key -> value, or None.
     """
     state = {}
-    for _, row in _events_until(events, field, as_of).iterrows():
-        state[row["key"]] = None if _is_blank(row["toString"]) else row["toString"]
+    for key, _, _, to in _field_rows(events, field, as_of):
+        state[key] = None if _is_blank(to) else to
     return state
 
 
@@ -55,12 +68,12 @@ def label_state(events, as_of):
     event can do both, as a rename does. Returns a dict of issue key -> set of labels.
     """
     state = {}
-    for _, row in _events_until(events, "labels", as_of).iterrows():
-        labels = state.setdefault(row["key"], set())
-        if not _is_blank(row["fromString"]):
-            labels.discard(row["fromString"])
-        if not _is_blank(row["toString"]):
-            labels.add(row["toString"])
+    for key, _, removed, added in _field_rows(events, "labels", as_of):
+        labels = state.setdefault(key, set())
+        if not _is_blank(removed):
+            labels.discard(removed)
+        if not _is_blank(added):
+            labels.add(added)
     return state
 
 
@@ -76,8 +89,8 @@ def sprint_state(events, as_of):
     Returns a dict of issue key -> set of sprint names.
     """
     state = {}
-    for _, row in _events_until(events, "Sprint", as_of).iterrows():
-        state[row["key"]] = set(split_sprints(row["toString"]))
+    for key, _, _, to in _field_rows(events, "Sprint", as_of):
+        state[key] = set(split_sprints(to))
     return state
 
 
@@ -85,17 +98,19 @@ def sprints_on(state, key):
     """Return the set of sprints for one issue, or an empty set if it has none."""
     return set(state.get(key, set()))
 
-def last_change_time(events, field, as_of):
-    """Timestamp of each issue's latest event for one field, at or before as_of."""
-    state = {}
-    for _, row in _events_until(events, field, as_of).iterrows():
-        state[row["key"]] = row["created"]
-    return state
 
 def first_event_time(events, field, values, as_of):
     """Timestamp of each issue's first event for one field whose value is in `values`."""
     state = {}
-    for _, row in _events_until(events, field, as_of).iterrows():
-        if row["toString"] in values and row["key"] not in state:
-            state[row["key"]] = row["created"]
+    for key, created, _, to in _field_rows(events, field, as_of):
+        if to in values and key not in state:
+            state[key] = created
+    return state
+
+
+def last_change_time(events, field, as_of):
+    """Timestamp of each issue's latest event for one field, at or before as_of."""
+    state = {}
+    for key, created, _, _ in _field_rows(events, field, as_of):
+        state[key] = created
     return state
