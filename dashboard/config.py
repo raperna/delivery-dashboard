@@ -38,3 +38,10 @@ def status_settings(config):
 def holiday_path(config):
     """Resolve the holiday source relative to the project root."""
     return PROJECT_ROOT / config["holidays"]["source"]
+
+def statuses_mapped_to(config, target):
+    """Raw Jira status names that map to one normalised status, such as 'Done'."""
+    return {
+        raw for raw, normalised in config["status_mapping"].items()
+        if normalised == target
+    }

@@ -4,6 +4,7 @@ from dashboard.config import (
     holiday_path,
     load_config,
     status_settings,
+    statuses_mapped_to,
     validate_settings,
 )
 
@@ -40,3 +41,8 @@ def test_default_points_must_be_positive():
 def test_holiday_source_exists():
     # Fails in CI if the fixture is moved or ignored by Git
     assert holiday_path(load_config()).exists()
+
+def test_done_and_blocked_status_sets_come_from_config():
+    config = load_config()
+    assert "Done" in statuses_mapped_to(config, "Done")
+    assert statuses_mapped_to(config, "Blocked") == {"Blocked"}
