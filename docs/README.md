@@ -37,10 +37,11 @@ Updated at the end of each working session.
 | 15 | Streamlit interface, thin layer over build_report (D-032) | Done (manual check) | 6 |
 | 16 | Trend across sprints (D-035, D-036, D-037) | Done | 17 |
 | 17 | Scale check at 10,000 items (D-038) | Done | 4 |
+| 18 | Scope changes (US-07, D-039) and where-to-look prompts (US-08, D-040); replay cache (D-041) | Done | 12 |
 
 ## Current test count
 
-177 passing (2 config, 3 loader, 5 parsers, 6 sprint, 8 story points, 10 events, 9 sprint state, 10 commitment, 7 field state, 12 calendar, 18 status, 13 snapshot, 18 blocked, 16 metrics, 6 settings, 7 scenarios, 6 report, 17 trends, 4 scale check)
+190 passing (2 config, 3 loader, 5 parsers, 6 sprint, 8 story points, 10 events, 9 sprint state, 10 commitment, 7 field state, 12 calendar, 18 status, 13 snapshot, 18 blocked, 16 metrics, 6 settings, 7 scenarios, 6 report, 17 trends, 5 scale check, 12 signals)
 
 ## Next action
 

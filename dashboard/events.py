@@ -1,8 +1,13 @@
+import bisect
 import math
 
 import pandas as pd
 
 from dashboard.sprints import split_sprints
+
+# One-slot cache: the prepared rows for the last events table passed in.
+# The table is held by reference, so its identity cannot be reused (D-041).
+_prepared_cache = {"events": None, "by_field": {}}
 
 
 def _is_blank(value):
@@ -14,25 +19,34 @@ def _is_blank(value):
     return isinstance(value, str) and value == ""
 
 
-def _field_rows(events, field, as_of):
-    """Rows for one field created on or before as_of, as plain tuples in time order.
+def _prepared(events, field):
+    """Rows for one field, sorted by time, prepared once per events table (D-041)."""
+    if _prepared_cache["events"] is not events:
+        _prepared_cache["events"] = events
+        _prepared_cache["by_field"] = {}
+    by_field = _prepared_cache["by_field"]
+    if field not in by_field:
+        selected = events[events["field"] == field]
+        created = pd.to_datetime(selected["created"]).tolist()
+        rows = list(zip(
+            selected["key"].tolist(),
+            created,
+            selected["fromString"].tolist(),
+            selected["toString"].tolist(),
+        ))
+        order = sorted(range(len(rows)), key=lambda i: created[i])
+        by_field[field] = ([created[i] for i in order], [rows[i] for i in order])
+    return by_field[field]
 
-    Each row is (key, created, from, to). Built once per call from column lists,
-    not row by row through pandas, which is what made the old version slow.
+
+def _field_rows(events, field, as_of):
+    """Rows for one field created on or before as_of, in time order.
+
+    Each row is (key, created, from, to). The cutoff is found by binary search.
     """
-    selected = events[events["field"] == field]
-    created = pd.to_datetime(selected["created"]).tolist()
-    keys = selected["key"].tolist()
-    froms = selected["fromString"].tolist()
-    tos = selected["toString"].tolist()
-    cutoff = pd.Timestamp(as_of)
-    rows = [
-        (keys[i], created[i], froms[i], tos[i])
-        for i in range(len(keys))
-        if created[i] <= cutoff
-    ]
-    rows.sort(key=lambda row: row[1])
-    return rows
+    times, rows = _prepared(events, field)
+    end = bisect.bisect_right(times, pd.Timestamp(as_of))
+    return rows[:end]
 
 
 def field_state(events, field, as_of):

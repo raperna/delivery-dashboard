@@ -1,5 +1,5 @@
 import time
-from datetime import date
+from datetime import date, datetime
 
 from dashboard.calendar import holidays_from_csv
 from dashboard.config import (
@@ -64,3 +64,12 @@ def test_replays_do_not_iterate_dataframe_rows():
 
     source = inspect.getsource(events_module)
     assert "iterrows" not in source
+
+def test_replay_cache_does_not_leak_between_datasets():
+    from dashboard.events import field_state
+
+    first = build_scale_events(2, {"Backend": 2, "Frontend": 0, "DevOps": 0, "QA": 0})
+    second = build_scale_events(2, {"Backend": 0, "Frontend": 0, "DevOps": 0, "QA": 0})
+    cutoff = datetime(2026, 3, 6, 23, 59, 59)
+    assert field_state(first, "status", cutoff)["BA-1"] == "Done"
+    assert field_state(second, "status", cutoff)["BA-1"] == "In Progress"
