@@ -34,10 +34,12 @@ Updated at the end of each working session.
 | 12 | Blocked items with owners (D-027) | Done | 15 |
 | 13 | Metrics: throughput, velocity, cycle time (D-028 to D-030) | Done | 13 |
 | 14 | Config connection and synthetic scenarios (D-031) | Done | 12 |
+| 15 | Streamlit interface, thin layer over build_report (D-032) | Done (manual check) | 6 |
+| 16 | Trend across sprints (D-035, D-036, D-037) | Done | 17 |
 
 ## Current test count
 
-153 passing (2 config, 3 loader, 5 parsers, 6 sprint, 8 story points, 10 events, 9 sprint state, 10 commitment, 7 field state, 12 calendar, 18 status, 13 snapshot, 18 blocked, 13 metrics, 6 settings, 7 scenarios, 6 report)
+173 passing (2 config, 3 loader, 5 parsers, 6 sprint, 8 story points, 10 events, 9 sprint state, 10 commitment, 7 field state, 12 calendar, 18 status, 13 snapshot, 18 blocked, 16 metrics, 6 settings, 7 scenarios, 6 report, 17 trends)
 
 ## Next action
 
@@ -50,4 +52,3 @@ Write the events table tests: replay label and sprint changes to rebuild each is
 3. **Holiday calendar:** Barcelona 2027 local holidays unverified; use the Ajuntament `.ics` file.
 4. **Sprint names with commas:** unresolved. The parser splits on comma-space.
 5. **Kaggle license:** check before any public sharing of derived data.
-6. Trends view (US-05) will show throughput across sprints, which is no longer shown in the status table.

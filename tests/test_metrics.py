@@ -143,3 +143,27 @@ def test_rolling_average_needs_three_sprints():
 
 def test_rolling_average_is_blank_when_a_sprint_in_the_window_has_no_velocity():
     assert rolling_average([6, None, 12, 9]) == [None, None, None, None]
+
+def test_cycle_time_counts_calendar_days_between_dates():
+    # Started 2 March 12:00, Done 4 March 09:00: dates differ by 2 days
+    events = make_events([
+        status("DEMO-1", "2026-03-02 12:00:00", "In Progress", "To Do"),
+        status("DEMO-1", "2026-03-04 09:00:00", "Done", "In Progress"),
+    ])
+    assert cycle(events)["median"] == 2.0
+
+
+def test_same_day_completion_is_zero_days():
+    events = make_events([
+        status("DEMO-1", "2026-03-02 09:00:00", "In Progress", "To Do"),
+        status("DEMO-1", "2026-03-02 17:00:00", "Done", "In Progress"),
+    ])
+    assert cycle(events)["median"] == 0.0
+
+
+def test_overnight_completion_is_one_day():
+    events = make_events([
+        status("DEMO-1", "2026-03-02 17:00:00", "In Progress", "To Do"),
+        status("DEMO-1", "2026-03-03 09:00:00", "Done", "In Progress"),
+    ])
+    assert cycle(events)["median"] == 1.0

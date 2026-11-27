@@ -13,6 +13,7 @@ from dashboard.config import (
 )
 from dashboard.loader import CHANGELOG_COLUMNS, MissingColumnsError, read_export
 from dashboard.report import build_report, sprint_names
+from dashboard.trends import parse_sprint_lines, trend_for_team
 
 DATA_DIR = PROJECT_ROOT / "data"
 
@@ -142,3 +143,53 @@ st.caption(
     "points count as 1 point and are flagged (D-019). Unassigned blockers appear "
     "as Team Unassigned (D-025)."
 )
+
+TREND_LEGEND = [
+    ("Sprint", "Sprint name, as entered in the sidebar."),
+    ("Status", "Status of the team at the end of the sprint, using the same rule as the team status table."),
+    ("Speed", "velocity: assessed on story points. throughput: Not assessed, because the blank-point share is over the limit or the items carry no points. N/A: no items were committed."),
+    ("Throughput (work items)", "Committed items Done by the sprint end date, for every sprint."),
+    ("Velocity (story points)", "Story points Done by the sprint end date, for assessed sprints."),
+    ("Rolling velocity, 3 sprints (story points)", "Average of this sprint and the two before it. Blank until three sprints exist, and blank if any of them is blank."),
+    ("Cycle time median (calendar days)", "Median number of calendar days from first In Progress to first Done, for the team's committed items Done in the sprint."),
+]
+
+
+def trend_display(rows):
+    frame = []
+    for row in rows:
+        na = row["speed"] == "N/A"
+        frame.append({
+            "Sprint": row["sprint"],
+            "Status": row["status"],
+            "Speed": row["speed"],
+            "Throughput (work items)": "N/A" if na else row["throughput"],
+            "Velocity (story points)": None if row["velocity"] is None else round(row["velocity"], 1),
+            "Rolling velocity, 3 sprints (story points)": None if row["rolling_velocity"] is None else round(row["rolling_velocity"], 1),
+            "Cycle time median (calendar days)": None if row["cycle_median"] is None else round(row["cycle_median"], 1),
+        })
+    return pd.DataFrame(frame)
+
+
+st.subheader("Trend across sprints")
+sprint_text = st.sidebar.text_area(
+    "Sprints for trend: name, start, end (one per line, oldest first)",
+    height=150,
+)
+try:
+    trend_sprints = parse_sprint_lines(sprint_text)
+except ValueError as error:
+    st.error(str(error))
+    trend_sprints = []
+
+if trend_sprints:
+    team = st.selectbox("Team", team_labels)
+    started = statuses_mapped_to(config, "In Progress")
+    rows = trend_for_team(
+        events, trend_sprints, team, team_labels,
+        started, done_statuses, settings, holidays,
+    )
+    st.dataframe(trend_display(rows), hide_index=True, use_container_width=True)
+    show_legend("What the trend columns mean", TREND_LEGEND)
+else:
+    st.write("Enter at least one sprint in the sidebar to see the trend.")

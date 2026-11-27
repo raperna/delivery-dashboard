@@ -28,7 +28,7 @@ def cycle_time_summary(events, cutoff, started, done):
         elif end < start:
             not_started += 1
         else:
-            days.append((end - start).days)
+            days.append((end.date() - start.date()).days)
     summary = {
         "count": len(days),
         "median": None,
