@@ -56,3 +56,23 @@ def build_scenario_events():
     rows += _team_rows("QA", "QA", [None] * 6 + [3, 3, 3, 3], 0, done_when)
     rows += _blocked_rows()
     return pd.DataFrame(rows, columns=COLUMNS)
+
+def build_scale_events(items_per_team, done_per_team):
+    """Large changelog for the scale check: four teams in one sprint (D-038).
+
+    done_per_team maps each team to how many of its items are Done on 4 March.
+    Every item has 1 point, so the expected numbers can be worked out by hand.
+    """
+    rows = []
+    for team in TEAMS:
+        prefix = team[:2].upper()
+        done_count = done_per_team[team]
+        for index in range(1, items_per_team + 1):
+            key = f"{prefix}-{index}"
+            rows.append([key, "2026-03-01 09:00:00", "Sprint", None, SPRINT])
+            rows.append([key, "2026-03-01 10:00:00", "labels", None, team])
+            rows.append([key, "2026-03-01 11:00:00", "Story Points", None, "1"])
+            rows.append([key, "2026-03-02 12:00:00", "status", "To Do", "In Progress"])
+            if index <= done_count:
+                rows.append([key, "2026-03-04 09:00:00", "status", "In Progress", "Done"])
+    return pd.DataFrame(rows, columns=COLUMNS)
